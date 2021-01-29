@@ -1,0 +1,10 @@
+bean:
+ # 这里不能用双引号，并且不知道为什么，没关系，一样的。能用就行。
+ baseFilePath: 'D:/Enviroment/java/diligent-bee/diligent-bee/ftcloud/ftcloud/ftcloud/file'
+ privateKey: '永远选择去中正确的事，不是没做会不会后悔，是做了不后悔就可以了'
+ # redis验证码过期时间 单位秒 s
+ redisSiveTime: 300
+spring:
+  config:
+    activate:
+      on-profile: bean
