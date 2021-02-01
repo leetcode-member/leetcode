@@ -20,7 +20,7 @@ import java.util.Map;
  * @create 2020/8/16 15:48
  */
 @Slf4j
-@Component
+//@Component
 public class LoginAuthenticationInterceptor implements HandlerInterceptor {
     @Autowired
     TokenUtil tokenUtil;

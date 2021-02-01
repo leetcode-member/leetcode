@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * JWT
  * @author Jarvan
  * @version 1.0
  * @create 2020/11/29 16:31

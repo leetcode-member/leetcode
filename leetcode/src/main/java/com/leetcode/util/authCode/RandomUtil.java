@@ -1,4 +1,4 @@
-package com.leetcode.util.redis;
+package com.leetcode.util.authCode;
 
 
 /**

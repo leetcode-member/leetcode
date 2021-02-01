@@ -44,7 +44,6 @@ public class ApiForFrontTest02 {
      */
     @Test
     public void test2() throws UnirestException {
-
         Unirest.setTimeouts(0, 0);
         HttpResponse<String> response = Unirest.post("http://47.107.90.201:8080/login")
                 .header("Content-Type", "application/json")
@@ -52,6 +51,16 @@ public class ApiForFrontTest02 {
                 .header("token", "header.playload.signature")
                 .header("Accept-Charset", "utf8")
                 .body("{\r\n    \"name\": \"zhangsan\",\r\n    \"age\": 13\r\n}")
+                .asString();
+        System.out.println(response.getBody());
+    }
+
+    @Test
+    public void test3() throws UnirestException {
+        Unirest.setTimeouts(0, 0);
+        HttpResponse<String> response = Unirest.post("47.107.90.201:8080/login")
+                .header("Content-Type", "application/json; utf8")
+                .body("{\r\n    \"username\": \"fdsaf\",\r\n    \"password\": \"fdfdssf\"\r\n}")
                 .asString();
         System.out.println(response.getBody());
     }

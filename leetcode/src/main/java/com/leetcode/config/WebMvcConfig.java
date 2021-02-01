@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @version 1.0
  * @create 2020/11/29 16:54
  */
-@Configuration
+//@Configuration 拦截器
 public class WebMvcConfig
         implements WebMvcConfigurer {
     @Autowired
