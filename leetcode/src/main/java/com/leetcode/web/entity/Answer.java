@@ -1,7 +1,7 @@
 package com.leetcode.web.entity;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.time.LocalDateTime;
 import java.io.Serializable;
 
@@ -30,7 +30,7 @@ public class Answer implements Serializable {
     /**
      *  题解id
      */
-    @TableId
+    @TableId()
     private Integer answerId;
 
     /**
@@ -61,11 +61,13 @@ public class Answer implements Serializable {
     /**
      * 发表日期
      */
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime  createTime;
 
     /**
      *  修改日期
      */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime  updateTime;
 
     /**
@@ -86,6 +88,7 @@ public class Answer implements Serializable {
     /**
      *  逻辑删除
      */
+    @TableField(fill = FieldFill.INSERT)
     private Integer deleted;
 
 

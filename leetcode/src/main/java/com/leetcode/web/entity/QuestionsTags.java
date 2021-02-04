@@ -30,12 +30,12 @@ public class QuestionsTags implements Serializable {
      * question id
      */
     @TableId
-    private Integer questionId;
+    private Long questionId;
 
     /**
      *  tag 标签id
      */
-    private Integer tagId;
+    private Long tagId;
 
 
 }

@@ -30,7 +30,7 @@ public class AnswersTags implements Serializable {
      * 题解的id
      */
     @TableId
-    private Integer answerId;
+    private Long answerId;
 
     /**
      * 标签的id
