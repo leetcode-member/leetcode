@@ -1,7 +1,10 @@
 package com.leetcode.filter;
 
 
+import com.leetcode.config.BeanConfig;
 import com.leetcode.model.constant.TokenConstant;
+import com.leetcode.model.constant.UserRoleConstant;
+import com.leetcode.model.exception.TokenExpiredException;
 import com.leetcode.util.string.StringUtil;
 import com.leetcode.util.token.TokenUtil;
 import jdk.nashorn.internal.parser.Token;
@@ -20,10 +23,12 @@ import java.util.Map;
  * @create 2020/8/16 15:48
  */
 @Slf4j
-//@Component
+@Component
 public class LoginAuthenticationInterceptor implements HandlerInterceptor {
     @Autowired
     TokenUtil tokenUtil;
+    @Autowired
+    BeanConfig beanConfig;
 
 
     /**
@@ -38,22 +43,48 @@ public class LoginAuthenticationInterceptor implements HandlerInterceptor {
         }
         //为空就返回错误
         String token = httpServletRequest.getHeader(TokenConstant.TOKEN);
-        if (StringUtil.isEmpty(token)){
+        if (StringUtil.isEmpty(token)) {
             return false;
         }
-        String host = httpServletRequest.getHeader("Host");
-        log.info("=============="+host);
-        log.info("=============="+token);
-        log.info("=============="+tokenUtil);
-
-        Map<String, String> map = tokenUtil.parseToken(token, host);
-        //角色匹配就通行.
-        String roleCode = map.get("roleCode");
-        if ("admin".equals(roleCode)){
-            log.info("========token验证通过============");
+        log.info("==============token:" + token);
+        Map<String, String> map = tokenUtil.parseToken(token);
+        String userId = map.get(TokenConstant.USER_ID_CLAIN);
+        String userRole = map.get(TokenConstant.USER_ROLE_CLAIN);
+        long timeOfUse = System.currentTimeMillis() - Long.parseLong(map.get(TokenConstant.TIME_STAMP_CLAIN));
+        //1.判断 token 是否过期
+        //年轻 token
+        if (timeOfUse < beanConfig.getYangToken()) {
+           log.info("年轻 token");
+        }
+        //老年 token 就刷新 token
+        else if (timeOfUse >= beanConfig.getYangToken() && timeOfUse < beanConfig.getOldToken()) {
+            httpServletResponse.setHeader(TokenConstant.TOKEN,tokenUtil.getToken(userId,userRole));
+        }
+        //过期 token 就返回 token 无效.
+        else {
+            throw new TokenExpiredException();
+        }
+        //2.角色匹配.
+        if (UserRoleConstant.ROLE_USER.equals(userRole)) {
+            log.info("========user账户============");
+            return true;
+        }
+        if (UserRoleConstant.ROLE_ADMIN.equals(userRole)) {
+            log.info("========admin账户============");
             return true;
         }
         return false;
     }
+
+    /**
+     * 结束之后判断是否刷新 token
+     */
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        String oldToken = request.getHeader(TokenConstant.TOKEN);
+        Map<String, String> map = tokenUtil.parseToken(oldToken);
+
+    }
+
 
 }
