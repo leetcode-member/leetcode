@@ -1,5 +1,8 @@
 # 记录必要 commit 更新说明
 
+## 2021.02.05
+### 1. jarvan/fix-sql: 修复数据库，解决数据库字段空格问题
+
 ## 2021.02.04
 
 ### 3. jarvan/fix-token：添加 token controller 层测试用例
