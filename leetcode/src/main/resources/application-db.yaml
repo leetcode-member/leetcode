@@ -2,9 +2,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.43.102:3306/leetcode?useSSL=false&userUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://8.129.112.196:3306/leetcode?useSSL=false&userUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
     username: root
-    password: 612001
+    password: 687211
     type: com.zaxxer.hikari.HikariDataSource # 使用数据源默认光 Hikari
   # redis
   redis:

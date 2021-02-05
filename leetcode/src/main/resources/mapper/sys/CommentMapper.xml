@@ -2,4 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.leetcode.web.mapper.CommentMapper">
 
+
+    <insert id="comment" parameterType="com.leetcode.model.constant.CommentConstant">
+        insert into `sys_comment` (`content`,`user_id`,`parent_id`,`type`)
+        values (#{content},#{userId},#{parentId},#{type})
+    </insert>
 </mapper>
