@@ -1,7 +1,7 @@
 package com.leetcode.web.entity;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 
 import lombok.AllArgsConstructor;
@@ -30,8 +30,8 @@ public class Tag implements Serializable {
      * id
      * 如果不加 @TableId selectId 就不知道这个id是什么，所以一定要加上
      */
-    @TableId
-    private Integer tagId;
+    @TableId(type = IdType.ASSIGN_ID)
+    private Long tagId;
 
     /**
      * 标签名称
@@ -41,6 +41,7 @@ public class Tag implements Serializable {
     /**
      * 逻辑删除
      */
+    @TableField(fill = FieldFill.INSERT)
     private Integer deleted;
 
 

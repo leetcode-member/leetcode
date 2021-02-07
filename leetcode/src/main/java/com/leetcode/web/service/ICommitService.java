@@ -2,6 +2,10 @@ package com.leetcode.web.service;
 
 import com.leetcode.web.entity.Commit;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.leetcode.web.entity.dto.CommitRecord;
+import com.leetcode.web.entity.dto.UserActivityData;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ICommitService extends IService<Commit> {
 
+    List<CommitRecord> getUserAllCommit(Long userid);
+
+    List<UserActivityData> getUserActivity(long userid);
 }
