@@ -4,14 +4,14 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 #    数据库相关信息已修改，供测试使用（许兴军）
-    url: jdbc:mysql://localhost:3306/leetcode?useSSL=false&userUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://192.168.43.106:3306/leetcode?useSSL=false&userUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
     username: root
-    password: admin
+    password: 612001
     type: com.zaxxer.hikari.HikariDataSource # 使用数据源默认光 Hikari
   # redis
 #  redis相关信息已修改，供测试使用（许兴军）
   redis:
-    host: 127.0.0.1
+    host: 192.168.43.106
     port: 6379
   config:
     activate:
