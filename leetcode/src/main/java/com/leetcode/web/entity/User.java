@@ -1,9 +1,10 @@
 package com.leetcode.web.entity;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +32,7 @@ public class User implements Serializable {
      * user id
      */
     @TableId
-    private Integer userId;
+    private Long userId;
 
     /**
      * 用户角色,springsecurity规定：ROLE_USER,ROLE_ADMIN
@@ -86,21 +87,25 @@ public class User implements Serializable {
     /**
      * 注册时间
      */
-    private LocalDateTime  createTime;
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Date  createTime;
 
     /**
      *  账号信息更新时间
      */
-    private LocalDateTime  updateTime;
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Date  updateTime;
 
     /**
      *  乐观锁
      */
+    @Version
     private Integer version;
 
     /**
      *  逻辑删除
      */
+    @TableField(fill = FieldFill.INSERT)
     private Integer  deleted;
 
 

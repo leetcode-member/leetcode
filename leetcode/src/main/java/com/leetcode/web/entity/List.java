@@ -1,5 +1,7 @@
 package com.leetcode.web.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
@@ -30,7 +32,7 @@ public class List implements Serializable {
      *  list id
      */
     @TableId
-    private Integer listId;
+    private Long listId;
 
     /**
      * 列表名称
@@ -40,6 +42,7 @@ public class List implements Serializable {
     /**
      * 逻辑删除
      */
+    @TableField(fill = FieldFill.INSERT)
     private Integer deleted;
 
 

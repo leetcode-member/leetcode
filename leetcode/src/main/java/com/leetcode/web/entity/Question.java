@@ -1,5 +1,7 @@
 package com.leetcode.web.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.time.LocalDateTime;
@@ -31,7 +33,7 @@ public class Question implements Serializable {
      * question id
      */
     @TableId
-    private Integer questionId;
+    private Long questionId;
 
     /**
      *  题目的序号
@@ -71,11 +73,13 @@ public class Question implements Serializable {
     /**
      * 发表日期
      */
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     /**
      * 修改日期
      */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     /**
@@ -101,6 +105,7 @@ public class Question implements Serializable {
     /**
      * 逻辑删除
      */
+    @TableField(fill = FieldFill.INSERT)
     private Integer deleted;
 
 

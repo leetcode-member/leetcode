@@ -7,5 +7,7 @@ package com.leetcode.model.constant;
  */
 public class TokenConstant {
     public static String TOKEN = "token";
-    public static String LOGIN_TOKEN_KEY = "login_token_key";
+    public static String USER_ID_CLAIN = "userId";
+    public static String USER_ROLE_CLAIN = "userRole";
+    public static String TIME_STAMP_CLAIN = "timeStamp";
 }
