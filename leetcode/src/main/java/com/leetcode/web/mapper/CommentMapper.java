@@ -5,6 +5,8 @@ import com.leetcode.web.entity.Comment;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -18,5 +20,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface CommentMapper extends BaseMapper<Comment> {
-    void comment(CommentConstant commentConstant);
+
+    CommentConstant[] search();
 }

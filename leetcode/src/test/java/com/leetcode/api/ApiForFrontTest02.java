@@ -1,10 +1,13 @@
 package com.leetcode.api;
 
+import com.leetcode.model.constant.CommentConstant;
+import com.leetcode.web.mapper.CommentMapper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import okhttp3.*;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
@@ -63,5 +66,12 @@ public class ApiForFrontTest02 {
                 .body("{\r\n    \"username\": \"fdsaf\",\r\n    \"password\": \"fdfdssf\"\r\n}")
                 .asString();
         System.out.println(response.getBody());
+    }
+
+    @Autowired
+    private CommentMapper commentMapper;
+    @Test
+    public void test4(){
+        CommentConstant[] search = commentMapper.search();
     }
 }

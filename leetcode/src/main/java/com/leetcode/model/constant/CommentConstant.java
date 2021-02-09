@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 
+import java.util.Date;
+
 /**
  * @Author: 周宗成
  * @Date: 2021/2/4 16:00
@@ -14,12 +16,11 @@ import org.apache.ibatis.type.Alias;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommentConstant {
-    private String commentId;
-
+    private Long commentId;
     private String content;
-    @TableField("user_id")
-    private String userId;
-    @TableField("parent_id")
-    private String parentId;
-    private String type;
+    private Long userId;
+    private String nickname;
+    private String avatar;
+    private Date commentTime;
+    private Integer thumbup;
 }

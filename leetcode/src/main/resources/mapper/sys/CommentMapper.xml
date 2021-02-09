@@ -3,8 +3,16 @@
 <mapper namespace="com.leetcode.web.mapper.CommentMapper">
 
 
-    <insert id="comment" parameterType="com.leetcode.model.constant.CommentConstant">
-        insert into `sys_comment` (`content`,`user_id`,`parent_id`,`type`)
-        values (#{content},#{userId},#{parentId},#{type})
-    </insert>
+<!--    <insert id="comment" parameterType="com.leetcode.model.constant.CommentConstant">-->
+<!--        insert into `sys_comment` (`content`,`user_id`,`parent_id`,`type`)-->
+<!--        values (#{content},#{user_id},#{parent_id},#{type})-->
+<!--    </insert>-->
+    <select id="search" resultType="com.leetcode.model.constant.CommentConstant">
+   select nickname,avatar,sys_comment.user_id,sys_comment.comment_time,thumbup,content,comment_id
+from sys_user,sys_comment
+where sys_user.user_id=(
+select user_id
+from sys_comment
+where  parent_id=3001) and sys_comment.parent_id=3001
+    </select>
 </mapper>

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务实现类
@@ -23,12 +25,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements ICommentService {
-
     @Autowired
     private CommentMapper commentMapper;
-
-    @Override
-    public void comment(CommentConstant commentConstant) {
-        commentMapper.comment(commentConstant);
+    //评论插入
+    public void  addComment(Comment comment){
+        commentMapper.insert(comment);
     }
+
+    //获得评论
+//    public List<CommentConstant>  getComment(int questionId){
+//
+//    }
 }

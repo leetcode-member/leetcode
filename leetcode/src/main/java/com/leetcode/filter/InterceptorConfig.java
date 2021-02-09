@@ -11,17 +11,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @version 1.0
  * @create 2021/2/4 21:24
  */
-@Configuration
-public class InterceptorConfig implements WebMvcConfigurer {
-    @Autowired
-    LoginAuthenticationInterceptor loginAuthenticationInterceptor;
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        //除了登录都要 token
-        registry.addInterceptor(loginAuthenticationInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/login");
-    }
-
-}
+//暂时不用
+//@Configuration
+//public class InterceptorConfig implements WebMvcConfigurer {
+//    @Autowired
+//    LoginAuthenticationInterceptor loginAuthenticationInterceptor;
+//
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        //除了登录都要 token
+//        registry.addInterceptor(loginAuthenticationInterceptor)
+//                .addPathPatterns("/**")
+//                .excludePathPatterns("/login");
+//    }
+//
+//}
