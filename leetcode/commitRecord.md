@@ -3,7 +3,7 @@
 ### 1. jarvan/feature-cos: 更新cos对象储存
 前端请求字段字段名为 `file`
 ```json
-"file": 文件
+"uploadFile": 文件
 ```
 后端直接返回请求体
 ```json
