@@ -1,13 +1,10 @@
 package com.leetcode.model.constant;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.ibatis.type.Alias;
 
 import java.util.Date;
-
 /**
  * @Author: 周宗成
  * @Date: 2021/2/10 19:46
@@ -15,12 +12,13 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentConstant {
-    private Long commentId;
+public class Reply {
+    private String at;
     private String content;
-    private Long userId;
     private String nickname;
     private String avatar;
+    private Long userId;
+    private Long commentId;
     private Date commentTime;
     private Integer thumbup;
 }

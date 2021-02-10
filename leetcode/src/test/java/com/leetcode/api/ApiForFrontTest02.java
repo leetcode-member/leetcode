@@ -70,8 +70,5 @@ public class ApiForFrontTest02 {
 
     @Autowired
     private CommentMapper commentMapper;
-    @Test
-    public void test4(){
-        CommentConstant[] search = commentMapper.search();
-    }
+
 }

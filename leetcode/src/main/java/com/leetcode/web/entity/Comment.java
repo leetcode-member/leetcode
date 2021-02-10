@@ -43,12 +43,12 @@ public class Comment implements Serializable {
     /**
      * 评论人ID
      */
-    private Integer  userId;
+    private Long  userId;
 
     /**
      *  评论父（目标）ID（目标类型通过 type类型确定）
      */
-    private Integer  parentId;
+    private Long  parentId;
 
     /**
      * 评论日期
