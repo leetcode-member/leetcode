@@ -62,5 +62,32 @@ public class TokenUtil {
         return map;
     }
 
+    /**
+     * 获得 userId
+     * @param token
+     * @return
+     */
+    public String getUserId(String token) {
+        return this.parseToken(token).get(TokenConstant.USER_ID_CLAIN);
+    }
+
+    /**
+     * 获得 userRole
+     * @param token
+     * @return
+     */
+    public String getUserRole(String token) {
+        return this.parseToken(token).get(TokenConstant.USER_ROLE_CLAIN);
+    }
+
+    /**
+     * 获得 时间戳
+     * @param token
+     * @return
+     */
+    public String getTimeStamp(String token) {
+        return this.parseToken(token).get(TokenConstant.TIME_STAMP_CLAIN);
+    }
+
 
 }

@@ -8,6 +8,12 @@ bean:
  yangToken: 1000000000
  #老年 token 的时间为 3 天(老年就需要更新新 token)
  oldToken: 30000000000
+ # 文件上传的文件夹
+ uploadFolder: leetcode-img
+ # 进行缓存设置的域名
+ fileCacheDomain: bmft.xyz
+ #
+
 
 spring:
   config:

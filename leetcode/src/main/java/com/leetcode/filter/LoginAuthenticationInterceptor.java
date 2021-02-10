@@ -76,15 +76,6 @@ public class LoginAuthenticationInterceptor implements HandlerInterceptor {
         return false;
     }
 
-    /**
-     * 结束之后判断是否刷新 token
-     */
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        String oldToken = request.getHeader(TokenConstant.TOKEN);
-        Map<String, String> map = tokenUtil.parseToken(oldToken);
-
-    }
 
 
 }

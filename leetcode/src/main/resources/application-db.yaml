@@ -16,6 +16,10 @@ spring:
   config:
     activate:
       on-profile: db
+  servlet:
+    multipart:
+      max-request-size: 10MB
+      max-file-size:  10MB
 #mp
 mybatis-plus:
   configuration:
