@@ -1,7 +1,7 @@
 # 记录必要 commit 更新说明
 ## 2021.02.10
 ### 1. jarvan/feature-cos: 更新cos对象储存
-前端请求字段字段名为 `file`
+前端请求字段字段名为 `uploadFile`
 ```json
 "uploadFile": 文件
 ```
