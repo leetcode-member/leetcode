@@ -1,0 +1,38 @@
+{
+  "properties": [
+    {
+      "name": "bean.redisSiveTime",
+      "type": "java.lang.Long",
+      "description": "Description for bean.redisSiveTime."
+    },
+    {
+      "name": "bean.yangToken",
+      "type": "java.lang.Long",
+      "description": "Description for bean.yangToken."
+    },
+    {
+      "name": "file.endpoint",
+      "type": "java.lang.String",
+      "description": "Description for file.endpoint."
+    },
+    {
+      "name": "file.accessKeyId",
+      "type": "java.lang.String",
+      "description": "Description for file.accessKeyId."
+    },
+    {
+      "name": "file.accessKeySecret",
+      "type": "java.lang.String",
+      "description": "Description for file.accessKeySecret."
+    },
+    {
+      "name": "file.bucketName",
+      "type": "java.lang.String",
+      "description": "Description for file.bucketName."
+    },
+    {
+      "name": "bean.uploadFolder",
+      "type": "java.lang.String",
+      "description": "Description for bean.uploadFolder."
+    }
+  ] }

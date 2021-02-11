@@ -4,6 +4,17 @@ bean:
  privateKey: '永远选择去中正确的事，不是没做会不会后悔，是做了不后悔就可以了'
  # redis验证码过期时间 单位秒 s
  redisSiveTime: 300
+ #年轻 token 的时间为 5 小时
+ yangToken: 1000000000
+ #老年 token 的时间为 3 天(老年就需要更新新 token)
+ oldToken: 30000000000
+ # 文件上传的文件夹
+ uploadFolder: leetcode-img
+ # 进行缓存设置的域名
+ fileCacheDomain: bmft.xyz
+ #
+
+
 spring:
   config:
     activate:

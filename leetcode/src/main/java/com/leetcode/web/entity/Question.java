@@ -1,10 +1,17 @@
 package com.leetcode.web.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,7 +38,7 @@ public class Question implements Serializable {
      * question id
      */
     @TableId
-    private Integer questionId;
+    private Long questionId;
 
     /**
      *  题目的序号
@@ -71,12 +78,14 @@ public class Question implements Serializable {
     /**
      * 发表日期
      */
-    private LocalDateTime createTime;
+    @TableField(fill = FieldFill.INSERT)
+    private Date createTime;
 
     /**
      * 修改日期
      */
-    private LocalDateTime updateTime;
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Date updateTime;
 
     /**
      * 点赞数
@@ -99,8 +108,24 @@ public class Question implements Serializable {
     private Integer passNum;
 
     /**
+     * 一道题的初始代码模板
+     */
+    private String initialCode;
+
+    /**
+     * 用于评测的测试用例
+     */
+    private String commitTestCase;
+
+    /**
+     * 正确的代码
+     */
+    private String correctCode;
+
+    /**
      * 逻辑删除
      */
+    @TableField(fill = FieldFill.INSERT, select = false)
     private Integer deleted;
 
 
