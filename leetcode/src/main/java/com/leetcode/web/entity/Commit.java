@@ -1,5 +1,7 @@
 package com.leetcode.web.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.time.LocalDateTime;
@@ -31,7 +33,7 @@ public class Commit implements Serializable {
      * 主键id
      */
     @TableId
-    private Integer commitId;
+    private Long commitId;
 
     /**
      * 提交用户id
@@ -71,6 +73,7 @@ public class Commit implements Serializable {
     /**
      * 逻辑删除
      */
+    @TableField(fill = FieldFill.INSERT)
     private Integer deleted;
 
 

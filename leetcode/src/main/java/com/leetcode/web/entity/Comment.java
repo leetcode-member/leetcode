@@ -1,5 +1,7 @@
 package com.leetcode.web.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.time.LocalDateTime;
@@ -31,7 +33,7 @@ public class Comment implements Serializable {
      * 评论id
      */
     @TableId
-    private Integer commentId;
+    private Long commentId;
 
     /**
      * 评论内容
@@ -66,6 +68,7 @@ public class Comment implements Serializable {
     /**
      *  逻辑删除
      */
+    @TableField(fill = FieldFill.INSERT)
     private Integer  deleted;
 
 

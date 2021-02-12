@@ -30,12 +30,12 @@ public class QuestionsLists implements Serializable {
      *  question id
      */
     @TableId
-    private Integer questionId;
+    private Long questionId;
 
     /**
      * list（列表）id
      */
-    private Integer listId;
+    private Long listId;
 
 
 }
