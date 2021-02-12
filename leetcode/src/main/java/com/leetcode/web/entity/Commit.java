@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,17 +38,17 @@ public class Commit implements Serializable {
     /**
      * 提交用户id
      */
-    private Integer userId;
+    private Long userId;
 
     /**
      * 提交题目id
      */
-    private Integer questionId;
+    private Long questionId;
 
     /**
      * 提交题目时间(time)
      */
-    private LocalDateTime commitTime;
+    private Date commitTime;
 
     /**
      * 提交结果（有几种类型需要确定）

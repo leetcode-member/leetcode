@@ -48,4 +48,15 @@ public interface QuestionMapper extends BaseMapper<Question> {
                                             @Param("tag") String tag,
                                             @Param("keyword") String keyword,
                                             @Param("userid") Long userid);
+
+    /**
+     * 查询第 row+1 行记录
+     * @author liwenhao
+     * @param row 行数
+     * @return 返回题目信息
+     */
+    Question randomSelect(Integer row);
+
+    String getLastCommitCode(@Param("userId") Long userId, @Param("questionId")  Long questionId);
+
 }
