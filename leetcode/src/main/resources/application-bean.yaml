@@ -13,3 +13,9 @@ spring:
   config:
     activate:
       on-profile: bean
+aliyun:
+  sms:
+    accessKeyId:LTAI4G787zGFcsXWWEFaHCGN
+    accessKeySecret:6q4nGASjy55d2cfrdGJhTQwSkyOdG5
+    template_code:
+    sign_name:

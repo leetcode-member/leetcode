@@ -13,3 +13,12 @@ public class LeetcodeApplication {
     }
 
 }
+@Bean
+public BcryptPasswordEncoder encoder(){
+    return new BCryptPasswordEncoder();
+}
+
+@Bean
+public TokenUtil tokenUtil(){
+    return new TokenUtil();
+}
