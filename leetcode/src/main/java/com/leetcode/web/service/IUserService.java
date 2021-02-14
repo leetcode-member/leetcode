@@ -33,4 +33,5 @@ public interface IUserService extends IService<User> {
      */
     public User login(User user){ }
 
+    User getAnswerCondition(Long userid);
 }
