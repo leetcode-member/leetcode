@@ -14,5 +14,8 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
-
+    public User selectByPhone(String phone);
+    public User selectByEmail(String email);
+    public User insertUser(user);
+    public User updataUser(user);
 }

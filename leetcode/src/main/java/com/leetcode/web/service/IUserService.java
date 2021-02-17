@@ -33,5 +33,7 @@ public interface IUserService extends IService<User> {
      */
     public User login(User user){ }
 
+    //修改用户信息
+    public boolean updata(String nickname,Number sex,String avater,String password){}
     User getAnswerCondition(Long userid);
 }
