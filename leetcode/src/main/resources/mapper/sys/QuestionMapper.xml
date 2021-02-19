@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.leetcode.web.mapper.QuestionMapper">
 
-
 <!--    查询用户带解题状态（answered）许兴军-->
     <select id="selectPageWithAnswered" resultType="com.leetcode.web.entity.dto.QuestionData">
         select sys_question.question_id,title,answer_num,concat(format(pass_num/submit_num,3) * 100,"%") as passRate,difficulty
@@ -111,6 +110,22 @@
             </if>
         </where>
         group by sys_question.question_id
+    </select>
 
+
+    <!--查询第 row+1 行记录 -->
+    <!--write by liwenhao-->
+    <select id="randomSelect" parameterType="Integer" resultType="com.leetcode.web.entity.Question">
+        SELECT * FROM sys_question LIMIT 1 OFFSET #{row}
+    </select>
+
+    <!--查询指定用户指定题目最新一次提交的代码（无论正确与否）-->
+    <!--write by liwenhao-->
+    <select id="getLastCommitCode" resultType="java.lang.String">
+        SELECT commit_code
+        FROM sys_commit
+        WHERE user_id = #{userId} AND question_id = #{questionId}
+        ORDER BY commit_time DESC
+        LIMIT 1;
     </select>
 </mapper>
