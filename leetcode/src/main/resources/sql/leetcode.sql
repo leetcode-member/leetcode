@@ -140,6 +140,7 @@ CREATE TABLE `sys_question`  (
   `initial_code` tinytext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '一道题的初始代码',
   `initial_test_case` tinytext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '一道题的初始测试用例',
   `commit_test_case` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '一道题的用于评测的测试用例',
+  `correct_code` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '题目对应的正确算法',
   `deleted` int(1) NULL DEFAULT NULL COMMENT '逻辑删除',
   PRIMARY KEY (`question_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
