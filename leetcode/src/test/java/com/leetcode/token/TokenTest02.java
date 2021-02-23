@@ -3,9 +3,7 @@ package com.leetcode.token;
 import com.leetcode.config.BeanConfig;
 import com.leetcode.model.constant.TokenConstant;
 import com.leetcode.model.constant.UserRoleConstant;
-import com.leetcode.util.authCode.AuthCodeUtil;
-import com.leetcode.util.authCode.RandomUtil;
-import com.leetcode.util.redis.RedisUtil;
+
 import com.leetcode.util.token.TokenUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;

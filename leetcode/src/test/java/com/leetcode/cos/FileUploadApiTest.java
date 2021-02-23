@@ -10,10 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -39,8 +36,15 @@ public class FileUploadApiTest {
         HttpResponse<String> response = Unirest.post("http://localhost:8080/upload")
                 .header("token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0aW1lU3RhbXAiOjE2MTI5MjM5NTM2NDUsInVzZXJSb2xlIjoiUk9MRV9VU0VSIiwidXNlcklkIjoiMSJ9.ITvEeNZw8Rbkw8K1pG8hfx4d0GqgRqQjc9Gk4IcAucY")
                 .header("Cookie", "JSESSIONID=D634EC33DDF360EB01579E93D57E8AC2")
-                .field("file", new File(filePath))
+                .field("file", new File(resource.getPath()))
                 .asString();
         System.out.println(response.getBody());
+    }
+    
+    @Test
+    public void blogTest() throws FileNotFoundException, UnsupportedEncodingException {
+        URL resource = GetPathTest.class.getClassLoader().getResource("uploadTest.png");
+        String filePath = java.net.URLDecoder.decode(resource.getPath(),"utf-8");
+        FileInputStream file = new FileInputStream(filePath);
     }
 }

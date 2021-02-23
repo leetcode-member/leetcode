@@ -22,7 +22,7 @@ public class TencentCOSUploadFileUtil {
     //secretId 秘钥id
     private static final String SECRET_ID = "AKIDRM2fT1QFxQdNrInLesqX2HSN0PaVFaiZ";
     //SecretKey 秘钥
-    private static final String SECRET_KEY = "mHfn4xxxxblhNmwqQ";
+    private static final String SECRET_KEY = "mHfn43jALGv79drrc6KI1c6TblhNmwqQ";
     // 腾讯云 自定义文件夹名称
     private static final String PREFIX = "/leetcode/";
     // 访问域名

@@ -15,15 +15,12 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 public class UploadFileController {
-
     @PostMapping("/upload")
-    public Result<String> upload(@RequestParam("uploadFile") MultipartFile file){
+    public String upload(@RequestParam("uploadFile") MultipartFile file){
         if (null == file) {
-            return Result.badRequest("文件为空");
+            return "文件为空";
         }
-        String uploadfile = TencentCOSUploadFileUtil.uploadfile(file);
-        return Result.ok(uploadfile);
+        String filePath = TencentCOSUploadFileUtil.uploadfile(file);
+        return "上传成功，访问地址为:"+filePath;
     }
-
-
 }
