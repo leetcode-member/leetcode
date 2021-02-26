@@ -1,23 +1,16 @@
 package com.leetcode.web.service.impl;
 
+import com.leetcode.model.constant.MethodConst;
 import com.leetcode.util.authCode.AuthCodeUtil;
-import com.leetcode.util.authCode.RandomUtil;
-import com.leetcode.util.mail.MailUtilImpl;
-import com.leetcode.util.redis.RedisUtil;
-import com.leetcode.util.result.Result;
 import com.leetcode.util.string.StringUtil;
-import com.leetcode.util.token.TokenUtil;
 import com.leetcode.web.entity.User;
 import com.leetcode.web.mapper.UserMapper;
 import com.leetcode.web.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
-import javax.xml.crypto.Data;
 import java.util.Date;
 
 /**
@@ -82,7 +75,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         //生成6位随机数
         String checkcode = String.valueOf(com.leetcode.util.authCode.RandomUtil.getSixRandomCode());
         //向redis缓存中放一份
-        RedisUtil.set("checkcode_" + email, checkcode, 300);
+        RedisUtil.set("checkcode_" + email, checkcode, 30000);
         //给用户发送一份
         try {
             authCodeUtil.sendAuthCode(email,checkcode);
@@ -208,15 +201,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 //    }
 //
     @Override
-    public void foget(String method, String loginbody, String code, String newpassword) {
-        if ("email".equals(method)) {
-            if (!StringUtil.isEmpty(loginbody) && !StringUtil.isEmpty(code) && !StringUtil.isEmpty((String) RedisUtil.get("checkcode_" + loginbody)) && code.equals((String) RedisUtil.get("checkcode_" + loginbody))) {
+    public boolean forget(String method, String loginbody, String code, String newPassword) {
+        if (MethodConst.EMAIL.equals(method.toLowerCase())) {
+            if (StringUtil.isNotEmpty(loginbody)
+                    && !StringUtil.isEmpty(code)
+                    && !StringUtil.isEmpty((String) RedisUtil.get("checkcode_" + loginbody))
+                    && code.equals((String) RedisUtil.get("checkcode_" + loginbody))) {
                 User user = userMapper.selectByEmail(loginbody);
                 //修改密码
-                user.setPassword(passwordEncoder.encode(newpassword));
-                userMapper.updataUser(user);
-                }
+                user.setPassword(passwordEncoder.encode(newPassword));
+                User user1 = userMapper.updataUser(user);
             }
+        } else {
+
         }
+        return  false;
+        }
+
 
     }

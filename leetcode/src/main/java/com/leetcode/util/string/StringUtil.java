@@ -7,11 +7,20 @@ package com.leetcode.util.string;
  */
 public class StringUtil {
     /**
+     * 不为空
+     */
+    public static boolean isNotEmpty(String string){
+        return !isEmpty(string);
+    }
+    /**
      * 判断是否为空，
      * @param string
      * @return
      */
     public static boolean isEmpty(String string){
+        if (null == string) {
+            return false;
+        }
         if (string.length()==0){
             return true;
         }else if (string.trim().length()==0){

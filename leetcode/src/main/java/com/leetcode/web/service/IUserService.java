@@ -31,5 +31,5 @@ public interface IUserService extends IService<User> {
     //修改用户信息
     public void updata(Long userId,String nickname,Number sex,String avater,String newpassword);
     User getAnswerCondition(Long userid);
-    public void foget(String method, String username, String code, String newpassword);
+    public boolean forget(String method, String username, String code, String newpassword);
 }

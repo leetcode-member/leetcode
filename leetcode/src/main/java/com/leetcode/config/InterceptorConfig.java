@@ -22,8 +22,10 @@ public class InterceptorConfig implements WebMvcConfigurer {
         //除了登录都要 token
         registry.addInterceptor(loginAuthenticationInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/login")
                 .excludePathPatterns("/test1")
+                .excludePathPatterns("/user/login")
+                .excludePathPatterns("/user/register")
+                .excludePathPatterns("/user/forget")
                 .excludePathPatterns("/user/requestcode");
     }
 

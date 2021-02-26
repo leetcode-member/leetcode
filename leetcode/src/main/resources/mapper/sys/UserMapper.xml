@@ -1,8 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.leetcode.web.mapper.UserMapper">
+    <update id="forgetUpdate">
+        UPDATE `leetcode`.`sys_user`
+        SET `password` = #{newPassword}
+        WHERE `phone` = #{forgetBody}
+           or `email` = #{forgetBody}
+    </update>
+    <update id="updateInfo">
+        UPDATE `leetcode`.`sys_user`
+        <set>
+            <if test="updateInfoDTO.nickname!=null and updateInfoDTO.nickname != ''">
+                `nickname` = #{updateInfoDTO.nickname},
+            </if>
+            <if test="updateInfoDTO.password!=null and updateInfoDTO.password != ''">
+                `password` = #{updateInfoDTO.password},
+            </if>
+            <if test="updateInfoDTO.sex!=null and updateInfoDTO.sex != ''">
+                `sex` = #{updateInfoDTO.sex},
+            </if>
+            <if test="updateInfoDTO.avatar!=null and updateInfoDTO.avatar != ''">
+                `avatar` = #{updateInfoDTO.avatar}
+            </if>
+        </set>
+        where `user_id` = #{userId}
+    </update>
+
 
     <select id="getAnswer" resultType="com.leetcode.web.entity.User">
-        select num_simp,num_mid,num_diff from sys_user where user_id = #{userid}
+        select num_simp, num_mid, num_diff
+        from sys_user
+        where user_id = #{userid}
     </select>
 </mapper>

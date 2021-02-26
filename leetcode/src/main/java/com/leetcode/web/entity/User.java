@@ -35,7 +35,7 @@ public class User implements Serializable {
     private Long userId;
 
     /**
-     * 用户角色,springsecurity规定：ROLE_USER,ROLE_ADMIN
+     * 用户角色,springsecurity规定：ROLE_USER,ROLE_ADMIN，默认 USER
      */
     private String userRole;
 
@@ -50,17 +50,17 @@ public class User implements Serializable {
     private String password;
 
     /**
-     *  别名
+     *  别名,默认是邮箱名
      */
     private String nickname;
 
     /**
-     *  性别(1男,0女)
+     *  性别(1男,0女) 默认为男
      */
     private Integer  sex;
 
     /**
-     * 头像图片地址
+     * 头像图片地址,初始化有一个默认头像
      */
     private String  avatar;
 
@@ -99,6 +99,7 @@ public class User implements Serializable {
     /**
      *  乐观锁
      */
+    @TableField(fill = FieldFill.INSERT)
     @Version
     private Integer version;
 

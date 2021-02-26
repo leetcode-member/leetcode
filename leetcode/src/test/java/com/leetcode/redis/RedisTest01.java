@@ -38,4 +38,9 @@ public class RedisTest01 {
         System.out.println(o);
         Thread.sleep(10000);
     }
+
+    @Test
+    public void redisAuthGetTest(){
+        System.out.println(redisUtil.get("checkcode_1207402602@qq.com"));
+    }
 }
