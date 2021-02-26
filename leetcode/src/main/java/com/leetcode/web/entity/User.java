@@ -2,6 +2,7 @@ package com.leetcode.web.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 
+import java.time.LocalDateTime;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -25,14 +26,13 @@ import lombok.NoArgsConstructor;
 @TableName("sys_user")
 public class User implements Serializable {
 
-
+    private static final long serialVersionUID = 1L;
 
     /**
      * user id
      */
     @TableId
     private Long userId;
-
 
     /**
      * 用户角色,springsecurity规定：ROLE_USER,ROLE_ADMIN
@@ -109,27 +109,4 @@ public class User implements Serializable {
     private Integer  deleted;
 
 
-    public String getUserId() {
-        return Long.toString(userId);
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getUserRole() {
-        return userRole;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
 }
