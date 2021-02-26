@@ -7,7 +7,7 @@ import com.leetcode.model.constant.UserRoleConstant;
 import com.leetcode.model.exception.TokenExpiredException;
 import com.leetcode.util.string.StringUtil;
 import com.leetcode.util.token.TokenUtil;
-import jdk.nashorn.internal.parser.Token;
+//import jdk.nashorn.internal.parser.Token;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

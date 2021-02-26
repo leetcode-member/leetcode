@@ -1,6 +1,8 @@
 package com.leetcode.util.authCode;
 
 
+import org.springframework.stereotype.Component;
+
 /**
  * <p>
  * 随机数工具类
@@ -9,7 +11,7 @@ package com.leetcode.util.authCode;
  * @author zchen
  * @create 2018-09-25 15:32
  */
-
+@Component
 public class RandomUtil {
 
     /**
