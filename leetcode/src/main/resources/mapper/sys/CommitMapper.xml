@@ -2,4 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.leetcode.web.mapper.CommitMapper">
 
+
+<!--    查询用户提交信息（许兴军）-->
+    <select id="getUserAllCommit" resultType="com.leetcode.web.entity.dto.CommitRecord">
+        select user_id,title,sys_question.question_id,commit_result,commit_time
+        from sys_commit
+        left join sys_question on sys_commit.question_id = sys_question.question_id
+        where user_id = #{userid}
+    </select>
+
+<!--    查询用户活跃度-->
+    <select id="getUserActivity" resultType="com.leetcode.web.entity.dto.UserActivityData">
+
+        select user_id,date_format(commit_time,'%Y-%m-%d') as commitTime,count(*) as commitTimes
+        from sys_commit
+        where user_id = #{userid}
+        group by commitTime
+    </select>
 </mapper>

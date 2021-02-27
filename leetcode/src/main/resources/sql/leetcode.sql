@@ -11,7 +11,7 @@
  Target Server Version : 50730
  File Encoding         : 65001
 
- Date: 04/02/2021 17:37:25
+ Date: 05/02/2021 22:49:55
 */
 
 SET NAMES utf8mb4;
@@ -23,16 +23,16 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `sys_answer`;
 CREATE TABLE `sys_answer`  (
   `answer_id` bigint(20) NOT NULL COMMENT ' 题解id',
-  ` question_id` int(11) NOT NULL COMMENT '题目id',
-  ` user_id` int(11) NOT NULL COMMENT ' 用户id，发布题解的人',
+  `question_id` int(11) NOT NULL COMMENT '题目id',
+  `user_id` int(11) NOT NULL COMMENT ' 用户id，发布题解的人',
   `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT ' 题解标题',
   `content` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '题解正文',
-  ` image` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT ' 题解封面图片url',
-  ` create_time` datetime(0) NOT NULL COMMENT '发表日期',
-  ` update_time` datetime(0) NULL DEFAULT NULL COMMENT ' 修改日期',
-  ` view` int(11) NULL DEFAULT NULL COMMENT '浏览量',
-  ` thumbup` int(11) NULL DEFAULT NULL COMMENT ' 点赞量',
-  ` comment` int(11) NULL DEFAULT NULL COMMENT ' 评论数',
+  `image` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT ' 题解封面图片url',
+  `create_time` datetime(0) NOT NULL COMMENT '发表日期',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT ' 修改日期',
+  `view` int(11) NULL DEFAULT NULL COMMENT '浏览量',
+  `thumbup` int(11) NULL DEFAULT NULL COMMENT ' 点赞量',
+  `comment` int(11) NULL DEFAULT NULL COMMENT ' 评论数',
   `deleted` int(1) NULL DEFAULT NULL COMMENT ' 逻辑删除',
   PRIMARY KEY (`answer_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
@@ -62,13 +62,13 @@ DROP TABLE IF EXISTS `sys_comment`;
 CREATE TABLE `sys_comment`  (
   `
 comment_id` bigint(20) NOT NULL COMMENT '评论id',
-  ` content` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '评论内容',
-  ` user_id` int(11) NOT NULL COMMENT '评论人ID',
-  ` parent_id` int(11) NULL DEFAULT NULL COMMENT ' 评论父（目标）ID（目标类型通过 type类型确定）',
-  ` comment_time` datetime(0) NULL DEFAULT NULL COMMENT '评论日期',
-  ` thumbup` int(11) NULL DEFAULT NULL COMMENT ' 点赞数',
+  `content` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '评论内容',
+  `user_id` int(11) NOT NULL COMMENT '评论人ID',
+  `parent_id` int(11) NULL DEFAULT NULL COMMENT ' 评论父（目标）ID（目标类型通过 type类型确定）',
+  `comment_time` datetime(0) NULL DEFAULT NULL COMMENT '评论日期',
+  `thumbup` int(11) NULL DEFAULT NULL COMMENT ' 点赞数',
   `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT ' 评论类型可选（question,comment,answer）',
-  ` deleted` int(1) NULL DEFAULT NULL COMMENT ' 逻辑删除',
+  `deleted` int(1) NULL DEFAULT NULL COMMENT ' 逻辑删除',
   PRIMARY KEY (`
 comment_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
@@ -140,6 +140,7 @@ CREATE TABLE `sys_question`  (
   `initial_code` tinytext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '一道题的初始代码',
   `initial_test_case` tinytext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '一道题的初始测试用例',
   `commit_test_case` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '一道题的用于评测的测试用例',
+  `correct_code` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '题目对应的正确算法',
   `deleted` int(1) NULL DEFAULT NULL COMMENT '逻辑删除',
   PRIMARY KEY (`question_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;

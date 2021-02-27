@@ -32,13 +32,14 @@ public class TokenTest02 {
      */
     @Test
     public void connectionTest() throws InterruptedException {
-        String token = tokenUtil.getToken("141324", UserRoleConstant.ROLE_ADMIN);
+        String token = tokenUtil.getToken("1", UserRoleConstant.ROLE_USER);
         System.out.println(token);
         Map<String, String> map = tokenUtil.parseToken(token);
         System.out.println(map.get(TokenConstant.USER_ROLE_CLAIN));
         System.out.println(map.get(TokenConstant.USER_ID_CLAIN));
         System.out.println(map.get(TokenConstant.TIME_STAMP_CLAIN));
     }
+
 //    获得 token yaml 值
     @Autowired
     BeanConfig beanConfig;

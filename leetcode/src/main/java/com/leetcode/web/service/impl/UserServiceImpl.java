@@ -4,6 +4,7 @@ import com.leetcode.web.entity.User;
 import com.leetcode.web.mapper.UserMapper;
 import com.leetcode.web.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,5 +17,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
+    @Autowired
+    private UserMapper userMapper;
 
+    @Override
+    public User getAnswerCondition(Long userid) {
+        return userMapper.getAnswer(userid);
+    }
 }

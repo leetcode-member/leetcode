@@ -1,4 +1,30 @@
 # 记录必要 commit 更新说明
+## 2021.02.23
+### 1. jarvan/reset-back-liwenhao
+## 2021.02.10
+### 1. jarvan/feature-cos: 更新cos对象储存
+前端请求字段字段名为 `uploadFile`
+```json
+"uploadFile": 文件
+```
+后端直接返回请求体
+```json
+{
+    "code": 200,
+    "message": "OK",
+    "data": "https://bmft-img-1304103443.cos.ap-chongqing.myqcloud.com/leetcode/23191612937129752.png"
+}
+```
+试过了，阿里云的 oss 垃圾，真的，starter oss 会注册失败，
+用官网的教程测试成功，但是用地址却拿不到图片，因为需要「备案的域名」
+我用了「备案的域名」还是会出现一些奇怪的bug，在oss文件管设置该文件可域名链。算了，
+用腾讯 cos 对象储存
+测试一切成功，但是在做 api 测试的时候，报错找不到文件，
+反复查找之后，因为中文和空格 encode 之后不能自动 decode，所以要将 url 再 decode 一次，
+测试成功！！！
+
+## 2021.02.05
+### 1. jarvan/fix-sql: 修复数据库，解决数据库字段空格问题
 
 ## 2021.02.04
 
@@ -37,3 +63,6 @@ userRole 的 2 个参数 用 UserRoleConstant.java 进行规范
 * 修改实体类的自动填充器，自动填充  `createTime`、`updateTime`、`deleted`字段
 
 * 测试插入部分数据 tag list user
+
+2021.2.7
+许兴军第一次任务提交

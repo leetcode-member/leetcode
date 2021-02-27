@@ -20,4 +20,8 @@ public class BeanConfig {
     private Long redisSaveTime;
     private Long yangToken;
     private Long oldToken;
+
+    private String uploadFolder;
+    private String fileCacheDomain;
+
 }
