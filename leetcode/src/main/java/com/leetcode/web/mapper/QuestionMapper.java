@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.leetcode.web.entity.dto.QuestionData;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  * <p>
@@ -17,6 +18,7 @@ import org.apache.ibatis.annotations.Param;
  * @since 2021-01-30
  */
 @Mapper
+@Repository
 public interface QuestionMapper extends BaseMapper<Question> {
 
     IPage<QuestionData> selectPageWithAnswered(Page<QuestionData> page,
