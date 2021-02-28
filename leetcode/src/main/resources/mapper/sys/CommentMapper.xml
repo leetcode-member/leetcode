@@ -2,4 +2,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.leetcode.web.mapper.CommentMapper">
 
+
+
+
+    <insert id="add" parameterType="com.leetcode.web.entity.Comment">
+    insert into sys_comment
+    set (content,user_id,parent_id,comment_time,thumbup,type)
+    values (#{content},#{user_id},#{parent_id},#{comment_time},#{thumbup},#{type})
+    </insert>
+
+    <select id="getComment" parameterType="com.leetcode.model.constant.GetCommentConstant" resultType="com.leetcode.model.constant.CommentConstant">
+      select nickname,avatar,sys_comment.user_id,sys_comment.comment_time,thumbup,content,comment_id
+from sys_user,sys_comment
+where sys_user.user_id=sys_comment.user_id AND sys_comment.parent_id=#{parentId}
+LIMIT #{pageNum},10
+    </select>
+
+    <select id="commentTotalPage" parameterType="com.leetcode.model.constant.GetCommentConstant" resultType="int">
+              select CEILING(count(*)/10)
+                from sys_user,sys_comment
+                where sys_user.user_id=sys_comment.user_id AND sys_comment.parent_id=#{parentId}
+    </select>
+
+    <select id="getReply" parameterType="Long" resultType="com.leetcode.model.constant.Reply">
+           select nickname,avatar,sys_comment.user_id,sys_comment.comment_time,thumbup,content,comment_id,(select nickname
+        from sys_user,sys_comment
+        where sys_comment.comment_id=#{parentId} and sys_user.user_id=sys_comment.user_id) as 'at'
+from sys_user,sys_comment
+where sys_user.user_id=sys_comment.user_id AND sys_comment.parent_id=#{parentId}
+    </select>
+
+
 </mapper>
