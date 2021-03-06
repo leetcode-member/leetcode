@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.core.assist.ISqlRunner;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -33,17 +34,17 @@ public class Commit implements Serializable {
      * 主键id
      */
     @TableId
-    private Long commitId;
+    private String commitId;
 
     /**
      * 提交用户id
      */
-    private Long userId;
+    private String userId;
 
     /**
      * 提交题目id
      */
-    private Long questionId;
+    private String questionId;
 
     /**
      * 提交题目时间(time)

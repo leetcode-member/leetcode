@@ -242,7 +242,8 @@ public class UserController {
     @PostMapping("/update-account")
     public Result updateAccount(HttpServletRequest request, @RequestBody UpdateAccountRequestDTO accountRequestDTO) {
         String userId = tokenUtil.getUserId(request.getHeader("token"));
-        if (authCodeSuccess(accountRequestDTO.getCode(), accountRequestDTO.getOldAccount())) {
+        //错了，这里应该验证新的验证码
+        if (authCodeSuccess(accountRequestDTO.getCode(), accountRequestDTO.getNewAccount())) {
             UpdateWrapper<User> wrapper = new UpdateWrapper<>();
             if (MethodConst.EMAIL.equals(accountRequestDTO.getMethod().toLowerCase())) {
                 wrapper.set("email", accountRequestDTO.getNewAccount());
@@ -318,7 +319,7 @@ public class UserController {
      */
     @GetMapping("/user/activity")
     @ResponseBody
-    public Result userActivity(HttpServletRequest request) {
+    public Result<List<UserActivityData>> userActivity(HttpServletRequest request) {
 
         // 从token中获取用户ID和用户权限
         String token = request.getHeader("token");
@@ -352,7 +353,7 @@ public class UserController {
             Object code = redisUtil.get("checkcode_" + forgetRequestDTO.getForGetBody());
             if (code != null) {
                 if (code.equals(forgetRequestDTO.getCode())) {
-                    updateSuccess = userMapper.forgetUpdate("1207402602@qq.com", bCryptPasswordEncoder.encode(forgetRequestDTO.getNewPassword()));
+                    updateSuccess = userMapper.forgetUpdate(forgetRequestDTO.getForGetBody(), bCryptPasswordEncoder.encode(forgetRequestDTO.getNewPassword()));
                 }
             }
         }

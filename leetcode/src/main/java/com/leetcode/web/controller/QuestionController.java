@@ -2,26 +2,27 @@ package com.leetcode.web.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.leetcode.model.constant.StatusConstant;
 import com.leetcode.model.constant.TokenConstant;
+import com.leetcode.model.dto.AllQuestionRequestDTO;
+import com.leetcode.model.dto.GetListResponseDTO;
 import com.leetcode.util.question.QuestionInfo;
 import com.leetcode.util.redis.RedisUtil;
 import com.leetcode.util.result.Result;
 import com.leetcode.util.token.TokenUtil;
+import com.leetcode.web.entity.Tag;
 import com.leetcode.web.entity.User;
 import com.leetcode.web.entity.dto.QuestionData;
+import com.leetcode.web.mapper.ListMapper;
+import com.leetcode.web.mapper.TagMapper;
 import com.leetcode.web.service.impl.QuestionServiceImpl;
 import com.leetcode.web.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.leetcode.util.question.QuestionUtils;
@@ -31,15 +32,7 @@ import com.leetcode.web.mapper.CommitMapper;
 import com.leetcode.web.mapper.QuestionMapper;
 import com.leetcode.web.service.AsyncService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -50,7 +43,6 @@ import java.util.concurrent.ExecutionException;
  */
 @RestController
 @RequestMapping(value = "/question")
-@ResponseBody
 @Slf4j
 public class QuestionController {
 
@@ -74,6 +66,21 @@ public class QuestionController {
 
     @Autowired
     private AsyncService asyncService;
+
+    @Autowired
+    private ListMapper listMapper;
+    @GetMapping("/get-list")
+    public Result<List<com.leetcode.web.entity.List>> getList() {
+        return Result.ok(listMapper.selectList(null));
+    }
+
+    @Autowired
+    private TagMapper tagMapper;
+    @GetMapping("/get-tag")
+    public Result<List<Tag>> getTag() {
+        return Result.ok(tagMapper.selectTags());
+    }
+
 
     /**
      * 获取用户做题信息
@@ -121,41 +128,40 @@ public class QuestionController {
         } else if ("ROLE_ADMIN".equals(role)) {
             //管理员
             return null;
-        } else
+        } else {
             return Result.unauthorized("用户角色无法识别！");
+        }
     }
 
 
     /**
      * 获取题目列表
      * xxj
+     * jarvan/update ：建议使用 POST + JSON 后端使用 DTO 类接受，规范且..
      *
-     * @param list       题目所属列表
-     * @param difficulty 题目难度
-     * @param status     题目状态
-     * @param pagenum    每页题目数量
-     * @param page       第几页
-     * @param tag        标签
-     * @param keyword    关键字
      * @return
      */
-    @GetMapping("/question/all")
+    @PostMapping("/question/all")
     @ResponseBody
     public Result allQuestion(HttpServletRequest request,
-                              String list,
-                              String difficulty,
-                              String status,
-                              Integer pagenum,
-                              Integer page,
-                              String tag,
-                              String keyword) {
-
+                              @RequestBody AllQuestionRequestDTO allQuestionRequestDTO) {
+        String list = allQuestionRequestDTO.getListId();
+        String difficulty = allQuestionRequestDTO.getDifficulty();
+        String status = allQuestionRequestDTO.getStatus();
+        Integer pageNum = allQuestionRequestDTO.getPageNum();
+        Integer page = allQuestionRequestDTO.getPage();
+        String tag = allQuestionRequestDTO.getTagId();
+        String keyword = allQuestionRequestDTO.getKeyword();
         //由于前端传输的是String类型的信息，数据库中是int类型这里作出转换
         Integer difficultyCon = difficultyJudge(difficulty);
         //判断pagenum和page是否合理
-        if (page == null || page <= 0) page = 1;
-        if (pagenum == null || pagenum <= 0) pagenum = 50;
-        Page<QuestionData> pageObj = new Page<>(page, pagenum);
+        if (page == null || page <= 0) {
+            page = 1;
+        }
+        if (pageNum == null || pageNum <= 0) {
+            pageNum = 50;
+        }
+        Page<QuestionData> pageObj = new Page<>(page, pageNum);
 
         //判断用户是否筛选做题情况（已做，未做，尝试过）
         if (status == null || "".equals(status)) {
@@ -179,18 +185,18 @@ public class QuestionController {
                 //普通用户
 
                 //判断用户要筛选的做题情况
-                if ("answered".equals(status)) {
-                    //筛选已解答
+                if (StatusConstant.ANSWERED.equals(status)) {
+                    //筛选已解答 answered
                     IPage<QuestionData> questionDataIPageWithAnswered = questionService.selectPageWithAnswered(pageObj, list, difficultyCon, status, tag, keyword, userid);
                     return Result.ok(questionDataIPageWithAnswered);
-                } else if ("tried".equals(status)) {
-                    //筛选已尝试
+                } else if (StatusConstant.TRIED.equals(status)) {
+                    //筛选已尝试 tried
                     System.out.println("筛选尝试");
                     IPage<QuestionData> questionDataIPageWithTried = questionService.selectPageWithTried(pageObj, list, difficultyCon, status, tag, keyword, userid);
 
                     return Result.ok(questionDataIPageWithTried);
-                } else if ("not-done".equals(status)) {
-                    //筛选未作答
+                } else if (StatusConstant.NOT_DONE.equals(status)) {
+                    //筛选未作答 not-done
                     System.out.println("筛选未作答");
                     IPage<QuestionData> questionDataIPageWithUndo = questionService.selectPageWithUndo(pageObj, list, difficultyCon, status, tag, keyword, userid);
                     return Result.ok(questionDataIPageWithUndo);
@@ -218,14 +224,15 @@ public class QuestionController {
      * @return
      */
     private Integer difficultyJudge(String diff) {
-        if ("easy".equals(diff))
+        if ("easy".equals(diff)) {
             return 0;
-        else if ("mid".equals(diff))
+        } else if ("mid".equals(diff)) {
             return 1;
-        else if ("diff".equals(diff))
+        } else if ("diff".equals(diff)) {
             return 2;
-        else
+        } else {
             return null;
+        }
     }
 
 
@@ -294,8 +301,8 @@ public class QuestionController {
         String userId = tokenMap.get(TokenConstant.USER_ID_CLAIN);
 
         Commit commit = new Commit();
-        commit.setUserId(Long.parseLong(userId));
-        commit.setQuestionId(Long.parseLong(questionId));
+        commit.setUserId(userId.trim());
+        commit.setQuestionId(questionId.trim());
         commit.setCommitCode(userCode);
 
         // 要返回给前端的结果
@@ -360,6 +367,7 @@ public class QuestionController {
         // 用来返回数据
         Map<String, String> dataMap = new HashMap<>();
         // 生成的.java文件和.class文件的存储位置（也就是在哪个目录下编译运行）
+        // linux 上怎么做？？
         String destPath = "D:\\DeskTop\\tmp\\";
 
         String questionId = requestMap.get("questionId");
@@ -418,21 +426,31 @@ public class QuestionController {
 
     /**
      * 题目随机开始以及开始（管理员未做）
-     *
+     * jarvan：我将这个接口改成了 RESTFul 格式
+     * jarvan: 非随机开始跑不动，会爆出异常 SQL 异常
+     * Unknown column 'correct_code' in 'field list'] with root cause
+     * 因为你没有在数据库中新建这个字段. 我帮你做了.
      * @param questionId 题目id（随机开始的为random）
      * @param token      token
      * @return
      * @author liwenhao
      */
-    @GetMapping(value = "/start")
-    public Result startQuestion(@RequestParam String questionId,
+    @GetMapping(value = "/start/{questionId}")
+    public Result startQuestion(@PathVariable( name = "questionId",required = false) String questionId,
                                 @RequestHeader("token") String token) {
+        log.info("questionId:" + questionId);
         Question question;
+        //赋值默认值
+        if (null == questionId || "".equals(questionId.trim())) {
+            questionId = "random";
+        }
         if ("random".equals(questionId)) {
             // 随机开始的情况
             Random random = new Random();
             int i = random.nextInt(questionMapper.selectCount(null));
             question = questionMapper.randomSelect(i);
+            //解决 random 的逻辑错误
+            questionId = question.getQuestionId()+"";
         } else {
             // 题目id确定的情况
             Question redisQuestion = (Question) redisUtil.get("question");
@@ -498,6 +516,7 @@ public class QuestionController {
         String userId = tokenMap.get(TokenConstant.USER_ID_CLAIN);
         log.info("userId={}", userId);
         // 获取此用户此题目最后一次提交的代码
+        //jarvan:这里有个逻辑错误，如果 是 random 那，这里怎么储存，所以应该在 random 哪里将 questionId 赋值
         String lastCommitCode = questionMapper.getLastCommitCode(Long.parseLong(userId), Long.parseLong(questionId));
         String commitBody;
         /*

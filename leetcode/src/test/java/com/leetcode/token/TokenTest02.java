@@ -32,6 +32,7 @@ public class TokenTest02 {
      */
     @Test
     public void connectionTest() throws InterruptedException {
+        //1357259291638530049
         String token = tokenUtil.getToken("1357259569548955649", UserRoleConstant.ROLE_USER);
         System.out.println(token);
         Map<String, String> map = tokenUtil.parseToken(token);

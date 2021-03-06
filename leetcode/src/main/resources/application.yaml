@@ -1,6 +1,9 @@
 # 这里是一个汇总的配置处
 server:
     port: 8080
+    servlet:
+        # 修改基本文件地址.
+        context-path: /leetcode
 spring:
     application:
         name: leetcode

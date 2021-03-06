@@ -38,13 +38,13 @@
         left join sys_tag on sys_question.tag_id = sys_tag.tag_id
         <where>
             <if test="list != null and list != ''">
-                and sys_list.list_name = #{list}
+                and sys_list.list_id = #{list}
             </if>
             <if test="difficulty != null and difficulty != ''">
                 and sys_question.difficulty = #{difficulty}
             </if>
             <if test="tag != null and tag != ''">
-                and sys_tag.tag_name = #{tag}
+                and sys_tag.tag_id = #{tag}
             </if>
             <if test="keyword != null and keyword != ''">
                 and (sys_question.question_id like "%"#{keyword,jdbcType=VARCHAR}"%" or title like "%"#{keyword,jdbcType=VARCHAR}"%")

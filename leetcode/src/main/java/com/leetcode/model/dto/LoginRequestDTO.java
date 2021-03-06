@@ -2,11 +2,13 @@ package com.leetcode.model.dto;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author  tanshixing
  */
 @Data
-public class LoginRequestDTO {
+public class LoginRequestDTO  implements Serializable {
     /**
      * 对应的 phone 或者世 Email 的值
      */

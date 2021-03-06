@@ -20,6 +20,12 @@ public class CommentController {
     private CommentServiceImpl commentService;
 
 
+    /**
+     * jarvan: Comment
+     * 发送的东西有些多吖，建议使用 DTO 数据传输类简化，其他内容在 java 代码中实现...
+     * @param comment
+     * @return
+     */
     //接口8 评论发送
     @PostMapping("/add")
     public ResponseConstant comment(@RequestBody Comment comment){
@@ -36,7 +42,7 @@ public class CommentController {
 
     //回复获取
     @GetMapping("/reply")
-    public ResponseConstant getReply(@RequestParam Long parentId){
+    public ResponseConstant getReply(@RequestParam(name = "parentId") Long parentId){
         List<Reply> r=commentService.getReply(parentId);
         return new ResponseConstant().success(r);
     }

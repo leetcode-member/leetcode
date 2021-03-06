@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author  tanshixing
  */
 @Data
-public class RequestCodeDTO  implements Serializable {
+public class RequestCodeDTO  implements Serializable  {
     private String method;
     private String number;
 

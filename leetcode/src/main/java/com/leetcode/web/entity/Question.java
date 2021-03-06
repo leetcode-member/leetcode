@@ -68,12 +68,12 @@ public class Question implements Serializable {
     /**
      * 题目类型(属于哪个列表)
      */
-    private Integer listId;
+    private String listId;
 
     /**
      * 题目标签(栈\队列\数组)
      */
-    private Integer tagId;
+    private String tagId;
 
     /**
      * 发表日期
@@ -115,10 +115,14 @@ public class Question implements Serializable {
     /**
      * 用于评测的测试用例
      */
+    private String initialTestCase;
+    /**
+     * 用于评测的测试用例
+     */
     private String commitTestCase;
 
     /**
-     * 正确的代码
+     * 正确的代码 在数据库中新建此字段，
      */
     private String correctCode;
 
