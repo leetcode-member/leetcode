@@ -3,6 +3,8 @@ FROM java:8
 
 #创建一个目录存放jar包
 RUN mkdir -p /opt/demo
+#【配置时区统一】
+RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
 
 #设置开放端口号
 
