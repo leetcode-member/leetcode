@@ -27,6 +27,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.swing.*;
 import java.util.List;
 import java.util.Map;
@@ -171,7 +172,7 @@ public class UserController {
      * 2. 通过 method 查询
      */
     @PostMapping("/login")
-    public Result login(@RequestBody LoginRequestDTO loginRequestDTO) {
+    public Result login(@RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse response) {
         log.info(loginRequestDTO.toString());
         boolean loginSuccess = false;
         if (null == loginRequestDTO) {
@@ -199,6 +200,9 @@ public class UserController {
         responseDTO.setNickname(user.getNickname());
         responseDTO.setSex(user.getSex() + "");
         //token 给到 header
+        String token = tokenUtil.getToken(user.getUserId() + "", user.getUserRole());
+        log.info("token:" + token);
+        response.setHeader("token",token);
         return Result.ok(responseDTO);
     }
 
