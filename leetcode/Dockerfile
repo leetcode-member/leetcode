@@ -7,7 +7,7 @@ RUN mkdir -p /opt/demo
 RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
 
 #设置开放端口号
-|
+
 #添加jar包，存放路径以及重命名
 ADD  target/app.jar  /opt/demo/demo.jar
 
