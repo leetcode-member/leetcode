@@ -106,7 +106,8 @@ public class UserController {
      * 用户注册
      * 1. method
      * 2. 对应不同的 authcode "checkcode_:[method]" 从 Redis上拿到 然后验证 ，失败抛出验证码错误异常
-     * 3. 验证通过就注册
+     * 3. 如果用户已经存在就返回用户已经注册.
+     * 4. 验证通过就注册
      *
      * @return
      */
@@ -124,7 +125,12 @@ public class UserController {
             //验证码过期
             throw new AuthCodeExpiredException();
         }
-        // 2.正确就注册 ...
+       // 3. 如果用户已经存在就返回用户已经注册.
+        int exist = userMapper.isExistByAccount(registerRequestDTO.getRegisterBody());
+        if (exist > 0) {
+            throw new BadRequestException("用户已经存在,请登录");
+        }
+        // 4.正确就注册 ...
         //注册之前清理 redis 验证码
         redisUtil.del("checkcode_" + registerRequestDTO.getRegisterBody());
         User user = new User();
@@ -193,6 +199,10 @@ public class UserController {
         //登录失败
         if (null == user) {
             throw new BadRequestException("没这个用户");
+        }
+        //如果密码不匹配
+        if (!user.getPassword().equals(loginRequestDTO.getPassword())) {
+            throw new BadRequestException("密码错误");
         }
         log.info(user.toString());
         LoginResponseDTO responseDTO = new LoginResponseDTO();

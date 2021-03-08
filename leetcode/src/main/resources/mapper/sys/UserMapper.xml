@@ -32,4 +32,10 @@
         from sys_user
         where user_id = #{userid}
     </select>
+    <select id="isExistByAccount" resultType="java.lang.Integer">
+        select count(*)
+        from sys_user
+        WHERE `phone` = #{account}
+           or `email` = #{account}
+    </select>
 </mapper>

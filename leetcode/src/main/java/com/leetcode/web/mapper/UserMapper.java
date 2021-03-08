@@ -34,5 +34,6 @@ public interface UserMapper extends BaseMapper<User> {
     boolean updateInfo(@Param("updateInfoDTO") UpdateInfoRequestDTO updateInfoRequestDTO,
                        @Param("userId") String userId);
 
+    int isExistByAccount(@Param("account") String account);
 
 }
