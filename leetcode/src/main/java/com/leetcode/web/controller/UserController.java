@@ -201,7 +201,7 @@ public class UserController {
             throw new BadRequestException("没这个用户");
         }
         //如果密码不匹配
-        if (!user.getPassword().equals(loginRequestDTO.getPassword())) {
+        if (!bCryptPasswordEncoder.matches(loginRequestDTO.getPassword(),user.getPassword()) ) {
             throw new BadRequestException("密码错误");
         }
         log.info(user.toString());
