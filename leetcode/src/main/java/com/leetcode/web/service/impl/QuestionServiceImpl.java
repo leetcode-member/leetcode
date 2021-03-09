@@ -26,21 +26,29 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
     @Override
     public IPage<QuestionData> selectPageWithoutStatus(Page<QuestionData> page, String list, Integer difficulty, String tag, String keyword) {
-        return questionMapper.selectPageWithoutStatus(page,list,difficulty,tag,keyword);
+        return formatPassRate(questionMapper.selectPageWithoutStatus(page,list,difficulty,tag,keyword));
     }
 
     @Override
     public IPage<QuestionData> selectPageWithTried(Page<QuestionData> page, String list, Integer difficulty, String status, String tag, String keyword, Long userid) {
-        return questionMapper.selectPageWithTried(page,list,difficulty,status,tag,keyword,userid);
+        return formatPassRate(questionMapper.selectPageWithTried(page,list,difficulty,status,tag,keyword,userid));
     }
 
     @Override
     public IPage<QuestionData> selectPageWithUndo(Page<QuestionData> page, String list, Integer difficulty, String status, String tag, String keyword, Long userid) {
-        return questionMapper.selectPageWithUndo(page,list,difficulty,status,tag,keyword,userid);
+        return formatPassRate(questionMapper.selectPageWithUndo(page,list,difficulty,status,tag,keyword,userid));
     }
 
     @Override
     public IPage<QuestionData> selectPageWithAnswered(Page<QuestionData> page,String list,Integer difficulty,String status,String tag,String keyword,Long userid) {
-        return questionMapper.selectPageWithAnswered(page,list,difficulty,status,tag,keyword,userid);
+        return formatPassRate(questionMapper.selectPageWithAnswered(page,list,difficulty,status,tag,keyword,userid));
+    }
+
+    private IPage<QuestionData> formatPassRate(IPage<QuestionData> questionDatas) {
+        for (QuestionData record : questionDatas.getRecords()) {
+            String passRate = record.getPassRate().substring(0, record.getPassRate().length() - 2);
+            record.setPassRate(String.format("%.1f",Double.valueOf(passRate)));
+        }
+        return questionDatas;
     }
 }
