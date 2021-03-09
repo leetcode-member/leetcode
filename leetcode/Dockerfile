@@ -20,4 +20,4 @@ WORKDIR   /opt/demo
 RUN bash -c 'touch /opt/demo/demo.jar'
 
 #启动容器执行命令。 -Djava.security.egd=file:/dev/./urandom 可以缩短tomcat启动时间
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/opt/demo/demo.jar"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/opt/demo/demo.jar","--server.port=8080"]
