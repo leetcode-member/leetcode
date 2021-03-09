@@ -5,9 +5,10 @@ import com.leetcode.config.BeanConfig;
 import com.leetcode.model.constant.TokenConstant;
 import com.leetcode.model.constant.UserRoleConstant;
 import com.leetcode.model.exception.TokenExpiredException;
+import com.leetcode.model.exception.TokenIsNullException;
 import com.leetcode.util.string.StringUtil;
 import com.leetcode.util.token.TokenUtil;
-import jdk.nashorn.internal.parser.Token;
+//import jdk.nashorn.internal.parser.Token;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -44,7 +45,8 @@ public class LoginAuthenticationInterceptor implements HandlerInterceptor {
         //为空就返回错误
         String token = httpServletRequest.getHeader(TokenConstant.TOKEN);
         if (StringUtil.isEmpty(token)) {
-            return false;
+            //token 为空
+            throw new TokenIsNullException();
         }
         log.info("==============token:" + token);
         Map<String, String> map = tokenUtil.parseToken(token);

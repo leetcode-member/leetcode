@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
     @RequestMapping("/test1")
     public Result<String> test1(){
-        return Result.ok("测试 controller 返回数据");
+        return Result.ok("服务器部署测试4");
     }
     @RequestMapping("/test2")
     public Result<User> test2(){

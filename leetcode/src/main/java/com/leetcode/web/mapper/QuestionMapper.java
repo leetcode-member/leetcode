@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.leetcode.web.entity.dto.QuestionData;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  * <p>
@@ -17,6 +18,7 @@ import org.apache.ibatis.annotations.Param;
  * @since 2021-01-30
  */
 @Mapper
+@Repository
 public interface QuestionMapper extends BaseMapper<Question> {
 
     IPage<QuestionData> selectPageWithAnswered(Page<QuestionData> page,
@@ -48,4 +50,15 @@ public interface QuestionMapper extends BaseMapper<Question> {
                                             @Param("tag") String tag,
                                             @Param("keyword") String keyword,
                                             @Param("userid") Long userid);
+
+    /**
+     * 查询第 row+1 行记录
+     * @author liwenhao
+     * @param row 行数
+     * @return 返回题目信息
+     */
+    Question randomSelect(Integer row);
+
+    String getLastCommitCode(@Param("userId") Long userId, @Param("questionId")  Long questionId);
+
 }

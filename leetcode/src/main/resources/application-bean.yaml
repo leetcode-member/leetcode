@@ -13,8 +13,6 @@ bean:
  # 进行缓存设置的域名
  fileCacheDomain: bmft.xyz
  #
-
-
 spring:
   config:
     activate:

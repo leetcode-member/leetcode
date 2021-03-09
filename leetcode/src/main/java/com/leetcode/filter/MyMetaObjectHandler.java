@@ -31,6 +31,8 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         this.setFieldValByName("updateTime",new Date(),metaObject);
         // 0 代表默认不删除!!
         this.setFieldValByName("deleted",0,metaObject);
+        this.setFieldValByName("version",0,metaObject);
+
     }
 
     /**

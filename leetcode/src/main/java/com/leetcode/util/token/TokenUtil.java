@@ -7,7 +7,7 @@ import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.leetcode.config.BeanConfig;
 import com.leetcode.model.constant.TokenConstant;
-import jdk.nashorn.internal.parser.Token;
+//import jdk.nashorn.internal.parser.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
