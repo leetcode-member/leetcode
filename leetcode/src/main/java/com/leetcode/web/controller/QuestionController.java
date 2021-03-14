@@ -5,7 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.leetcode.model.constant.StatusConstant;
 import com.leetcode.model.constant.TokenConstant;
 import com.leetcode.model.dto.AllQuestionRequestDTO;
+import com.leetcode.model.dto.CommitRequestDto;
+import com.leetcode.model.dto.CommitResponseDto;
 import com.leetcode.model.dto.GetListResponseDTO;
+import com.leetcode.model.dto.RunCodeRequestDTO;
+import com.leetcode.model.dto.RunCodeResponseDTO;
 import com.leetcode.util.question.QuestionInfo;
 import com.leetcode.util.redis.RedisUtil;
 import com.leetcode.util.result.Result;
@@ -238,190 +242,223 @@ public class QuestionController {
 
     /**
      * 提交代码
-     *
-     * @param requestMap 用于接收参数
-     * @param token      token
+     * @param commitRequestDto 接收请求参数的dto
+     * @param token
      * @return
-     * @throws ExecutionException
-     * @throws InterruptedException
-     * @author liwenhao
      */
     @PostMapping(value = "/commit")
-    public Result commitCode(@RequestBody Map<String, String> requestMap,
-                             @RequestHeader("token") String token) throws ExecutionException, InterruptedException {
-        // 用来返回数据
-        Map<String, String> dataMap = new HashMap<>();
-        // 生成的.java文件和.class文件的存储位置（也就是在哪个目录下编译运行）
-        String destPath = "D:\\DeskTop\\tmp\\";
-
-        // 获取questionId，去数据库中找标准的测试用例
-        String questionId = requestMap.get("questionId");
-        QueryWrapper<Question> questionQueryWrapper = new QueryWrapper<>();
-        questionQueryWrapper.select("commit_test_case").eq("question_id", questionId);
-        Question question = questionMapper.selectOne(questionQueryWrapper);
-        String testCaseAndAnswer = question.getCommitTestCase();
-        /*
-            [2,7,11,15]\n9@ANSWER@[0, 1]
-            由于commit_test_case这个字段中，要包含两个信息，一个是标准测试用例，另一个是这个用例对应的标准答案
-            因此插入题目的时候就以“@ANSWER@”分割测试用例和答案，类似于上面那样
-            测试用例如果有多个，就以“\n”，也就是换行符来分割
-            （这些只是暂定，如果要改后期也可以随时调整）
-         */
-        // 首先将拿到的信息分割为测试用例和答案两部分
-        String[] split = testCaseAndAnswer.split("@ANSWER@");
-        // 分别拿到测试用例和答案
-        String testCase = split[0];
-        String answer = split[1];
-        // 获得用户提交的代码
-        String userCode = requestMap.get("code");
-        // 获得测试用例的集合
-        List<String> testCaseList;
-        // 判断这个题目的方法有几个参数
-        if (QuestionUtils.multiParams(userCode)) {
-            // 如果有多个参数，按照"\n"为标志分割
-            testCaseList = Arrays.asList(testCase.split("\n"));
-        } else {
-            // 如果只有一个参数
-            testCaseList = Collections.singletonList(testCase);
-        }
-        // 合并代码
-        String s = QuestionUtils.mergeCode(userCode, testCaseList);
-        // 修改类名（文件名）
-        String filename = "Solution_" + questionId + "_" + System.currentTimeMillis();
-        String finalCode = s.replace("Solution", filename);
-        CompletableFuture<String> future = asyncService.executeCompileAndRun(finalCode, destPath, filename);
-        String output = future.get();
-        // 将输出划分，第一个是用户代码的输出结果，第二个是内存消耗（字节），第三个是时间消耗（毫秒）
-        String[] outputArr = output.split("\n");
-        String runResult = outputArr[0];
-        String memory = outputArr[1];
-        String runtime = outputArr[2];
-
-        Map<String, String> tokenMap = tokenUtil.parseToken(token);
-        String userId = tokenMap.get(TokenConstant.USER_ID_CLAIN);
-
-        Commit commit = new Commit();
-        commit.setUserId(userId.trim());
-        commit.setQuestionId(questionId.trim());
-        commit.setCommitCode(userCode);
-
-        // 要返回给前端的结果
-        String result;
-        if (runResult.equals(answer)) {
-            // 如果执行的结果和标准答案一样，再进行接下来的操作
-            commit.setRuntime(Integer.parseInt(runtime));
-            commit.setMemory(Integer.parseInt(memory));
-            dataMap.put("memory", memory);
-            dataMap.put("runtime", runtime);
-
-            result = "pass";
-            // 查出提交记录总数
-            QueryWrapper<Commit> commitQueryWrapper = new QueryWrapper<>();
-            commitQueryWrapper.eq("question_id", questionId);
-            Integer recordCount = commitMapper.selectCount(commitQueryWrapper);
-            // 分别查找出内存消耗和执行时间多余此次结果的用户
-            commitQueryWrapper.clear();
-            commitQueryWrapper.gt("memory", memory);
-            Integer memoryCount = commitMapper.selectCount(commitQueryWrapper);
-
-
-            commitQueryWrapper.clear();
-            commitQueryWrapper.gt("runtime", runtime);
-            Integer runTimeCount = commitMapper.selectCount(commitQueryWrapper);
-
-            String memoryBeat = String.format("%.2f", ((double) memoryCount / recordCount) * 100);
-            String runtimeBeat = String.format("%.2f", ((double) runTimeCount / recordCount) * 100);
-            dataMap.put("runtimeBeat", runtimeBeat);
-            dataMap.put("memoryBeat", memoryBeat);
-        } else {
-            // 如果答案错误 判断runResult是编译出错还是还是解答错误 错误情况下击败多少的百分比不合实际，不处理
-            if (runResult.contains("编译出错_")) {
-                result = "编译出错";
-            } else {
-                // 如果和标准答案不一样，编译还正常的话，那就归为解答错误（无论是抛运行时异常还是算法错了）
-                result = "解答错误";
-            }
-        }
-        commit.setCommitResult(result);
-        commit.setCommitTime(new Date());
-        // 将数据插入到表中去
-        commitMapper.insert(commit);
-
-        dataMap.put("result",result);
-        return Result.ok(dataMap);
+    public Result commitCode(@RequestBody CommitRequestDto commitRequestDto,
+                             @RequestHeader("token") String token) {
+        CommitResponseDto commitResponseDto = questionService.commitCode(commitRequestDto, token);
+        return Result.ok(commitResponseDto);
     }
 
+
+//    /**
+//     * 提交代码
+//     *
+//     * @param requestMap 用于接收参数
+//     * @param token      token
+//     * @return
+//     * @throws ExecutionException
+//     * @throws InterruptedException
+//     * @author liwenhao
+//     */
+//    @PostMapping(value = "/commit")
+//    public Result commitCode(@RequestBody Map<String, String> requestMap,
+//                             @RequestHeader("token") String token) throws ExecutionException, InterruptedException {
+//        // 用来返回数据
+//        Map<String, String> dataMap = new HashMap<>();
+//        // 生成的.java文件和.class文件的存储位置（也就是在哪个目录下编译运行）
+//        String destPath = "D:\\DeskTop\\tmp\\";
+//
+//        // 获取questionId，去数据库中找标准的测试用例
+//        String questionId = requestMap.get("questionId");
+//        QueryWrapper<Question> questionQueryWrapper = new QueryWrapper<>();
+//        questionQueryWrapper.select("commit_test_case").eq("question_id", questionId);
+//        Question question = questionMapper.selectOne(questionQueryWrapper);
+//        String testCaseAndAnswer = question.getCommitTestCase();
+//        /*
+//            [2,7,11,15]\n9@ANSWER@[0, 1]
+//            由于commit_test_case这个字段中，要包含两个信息，一个是标准测试用例，另一个是这个用例对应的标准答案
+//            因此插入题目的时候就以“@ANSWER@”分割测试用例和答案，类似于上面那样
+//            测试用例如果有多个，就以“\n”，也就是换行符来分割
+//            （这些只是暂定，如果要改后期也可以随时调整）
+//         */
+//        // 首先将拿到的信息分割为测试用例和答案两部分
+//        String[] split = testCaseAndAnswer.split("@ANSWER@");
+//        // 分别拿到测试用例和答案
+//        String testCase = split[0];
+//        String answer = split[1];
+//        // 获得用户提交的代码
+//        String userCode = requestMap.get("code");
+//        // 获得测试用例的集合
+//        List<String> testCaseList;
+//        // 判断这个题目的方法有几个参数
+//        if (QuestionUtils.multiParams(userCode)) {
+//            // 如果有多个参数，按照"\n"为标志分割
+//            testCaseList = Arrays.asList(testCase.split("\n"));
+//        } else {
+//            // 如果只有一个参数
+//            testCaseList = Collections.singletonList(testCase);
+//        }
+//        // 合并代码
+//        String s = QuestionUtils.mergeCode(userCode, testCaseList);
+//        // 修改类名（文件名）
+//        String filename = "Solution_" + questionId + "_" + System.currentTimeMillis();
+//        String finalCode = s.replace("Solution", filename);
+//        CompletableFuture<String> future = asyncService.executeCompileAndRun(finalCode, destPath, filename);
+//        String output = future.get();
+//        // 将输出划分，第一个是用户代码的输出结果，第二个是内存消耗（字节），第三个是时间消耗（毫秒）
+//        String[] outputArr = output.split("\n");
+//
+//        String runResult0 = outputArr[0];
+//        String runResult = runResult0;
+//        if (runResult0.contains(" ")) {
+//            runResult = runResult0.replace(" ", "");
+//        }
+//
+//        String memory = outputArr[1];
+//        String runtime = outputArr[2];
+//
+//        Map<String, String> tokenMap = tokenUtil.parseToken(token);
+//        String userId = tokenMap.get(TokenConstant.USER_ID_CLAIN);
+//
+//        Commit commit = new Commit();
+//        commit.setUserId(userId.trim());
+//        commit.setQuestionId(questionId.trim());
+//        commit.setCommitCode(userCode);
+//
+//        // 要返回给前端的结果
+//        String result;
+//        if (runResult.equals(answer)) {
+//            // 如果执行的结果和标准答案一样，再进行接下来的操作
+//            commit.setRuntime(Integer.parseInt(runtime));
+//            commit.setMemory(Integer.parseInt(memory));
+//            dataMap.put("memory", memory);
+//            dataMap.put("runtime", runtime);
+//
+//            result = "pass";
+//            // 查出提交记录总数
+//            QueryWrapper<Commit> commitQueryWrapper = new QueryWrapper<>();
+//            commitQueryWrapper.eq("question_id", questionId);
+//            Integer recordCount = commitMapper.selectCount(commitQueryWrapper);
+//            // 分别查找出内存消耗和执行时间多余此次结果的用户
+//            commitQueryWrapper.clear();
+//            commitQueryWrapper.gt("memory", memory);
+//            Integer memoryCount = commitMapper.selectCount(commitQueryWrapper);
+//
+//
+//            commitQueryWrapper.clear();
+//            commitQueryWrapper.gt("runtime", runtime);
+//            Integer runTimeCount = commitMapper.selectCount(commitQueryWrapper);
+//
+//            String memoryBeat = String.format("%.2f", ((double) memoryCount / recordCount) * 100);
+//            String runtimeBeat = String.format("%.2f", ((double) runTimeCount / recordCount) * 100);
+//            dataMap.put("runtimeBeat", runtimeBeat);
+//            dataMap.put("memoryBeat", memoryBeat);
+//        } else {
+//            // 如果答案错误 判断runResult是编译出错还是还是解答错误 错误情况下击败多少的百分比不合实际，不处理
+//            if (runResult.contains("编译出错_")) {
+//                result = "编译出错";
+//            } else {
+//                // 如果和标准答案不一样，编译还正常的话，那就归为解答错误（无论是抛运行时异常还是算法错了）
+//                result = "解答错误";
+//            }
+//        }
+//        commit.setCommitResult(result);
+//        commit.setCommitTime(new Date());
+//        // 将数据插入到表中去
+//        commitMapper.insert(commit);
+//
+//        dataMap.put("result",result);
+//        return Result.ok(dataMap);
+//    }
+
+
+//    /**
+//     * 执行代码（管理员未做）
+//     *
+//     * @param requestMap 用于接收参数
+//     * @param token      token
+//     * @return
+//     * @throws ExecutionException
+//     * @throws InterruptedException
+//     * @author liwenhao
+//     */
+//    @PostMapping(value = "/run")
+//    public Result runCode(@RequestBody Map<String, String> requestMap,
+//                          @RequestHeader("token") String token) throws ExecutionException, InterruptedException {
+//        // 用来返回数据
+//        Map<String, String> dataMap = new HashMap<>();
+//        // 生成的.java文件和.class文件的存储位置（也就是在哪个目录下编译运行）
+//        // linux 上怎么做？？
+//        String destPath = "D:\\DeskTop\\tmp\\";
+//
+//        String questionId = requestMap.get("questionId");
+//        String userCode = requestMap.get("code");
+//        String testCase = requestMap.get("testCase");
+//
+//        List<String> testCaseList;
+//        if (QuestionUtils.multiParams(userCode)) {
+//            // 如果有多个参数
+//            // 现在先假设测试用例的多个参数之间使用“\n”符号分割（这个后期有待商议）
+//            // 获取测试用例的集合
+//            testCaseList = Arrays.asList(testCase.split("\n"));
+//        } else {
+//            // 只有一个参数，直接放到集合中
+//            testCaseList = Collections.singletonList(testCase);
+//        }
+//
+//        // 合并生成可以编译执行的代码
+//        String uCode = QuestionUtils.mergeCode(userCode, testCaseList);
+//        Map<String, String> tokenMap = tokenUtil.parseToken(token);
+//        String userId = tokenMap.get(TokenConstant.USER_ID_CLAIN);
+//        // 用户执行代码文件名称保存为：Solution_用户id_当前毫秒数（不带后缀）。 例如：Solution_141324_1612927764160
+//        String uFilename = "Solution_" + userId + "_" + System.currentTimeMillis();
+//        String userFinalCode = uCode.replace("Solution", uFilename);
+//        log.info("用户可执行代码={}", userFinalCode);
+//        // 从数据库中查出标准的正确代码，和前段传来的测试用例跑一遍
+//        QueryWrapper<Question> questionQueryWrapper = new QueryWrapper<>();
+//        questionQueryWrapper.select("correct_code").eq("question_id", questionId);
+//        Question question = questionMapper.selectOne(questionQueryWrapper);
+//        String correctCode = question.getCorrectCode();
+//        String aCode = QuestionUtils.mergeCode(correctCode, testCaseList);
+//        String aFilename = "Solution" + "_" + userId + "_" + System.currentTimeMillis() + "_answer";
+//        String answerFinalCode = aCode.replace("Solution", aFilename);
+//        log.info("标准代码={}", answerFinalCode);
+//        // 分别去跑这两份代码，得到输出结果
+//        CompletableFuture<String> userFuture = asyncService.executeCompileAndRun(userFinalCode, destPath, uFilename);
+//        CompletableFuture<String> answerFuture = asyncService.executeCompileAndRun(answerFinalCode, destPath, aFilename);
+//        // 这个方法会阻塞主线程，一定可以拿到结果，但是有可能出现用户提交恶意代码的情况，暂时先放下，先做功能。
+//        String userResult = userFuture.get();
+//        String answerResult = answerFuture.get();
+//        // 一共会有三个输出，按顺序分别是程序执行结果、内存消耗（字节）和时间消耗（毫秒）
+//        String[] userArr = userResult.split("\n");
+//        String[] answerArr = answerResult.split("\n");
+//
+//        dataMap.put("input", testCase);
+//        dataMap.put("output", userArr[0]);
+//        dataMap.put("exceptResult", answerArr[0]);
+//        if (userArr[0].equals(answerArr[0])) {
+//            dataMap.put("state", "已完成");
+//        } else {
+//            dataMap.put("state", "error");
+//        }
+//
+//        return Result.ok(dataMap);
+//    }
+
     /**
-     * 执行代码（管理员未做）
-     *
-     * @param requestMap 用于接收参数
-     * @param token      token
+     * 执行代码
+     * @param runCodeRequestDTO 接收请求参数的dto
      * @return
-     * @throws ExecutionException
-     * @throws InterruptedException
      * @author liwenhao
      */
     @PostMapping(value = "/run")
-    public Result runCode(@RequestBody Map<String, String> requestMap,
-                          @RequestHeader("token") String token) throws ExecutionException, InterruptedException {
-        // 用来返回数据
-        Map<String, String> dataMap = new HashMap<>();
-        // 生成的.java文件和.class文件的存储位置（也就是在哪个目录下编译运行）
-        // linux 上怎么做？？
-        String destPath = "D:\\DeskTop\\tmp\\";
-
-        String questionId = requestMap.get("questionId");
-        String userCode = requestMap.get("code");
-        String testCase = requestMap.get("testCase");
-
-        List<String> testCaseList;
-        if (QuestionUtils.multiParams(userCode)) {
-            // 如果有多个参数
-            // 现在先假设测试用例的多个参数之间使用“\n”符号分割（这个后期有待商议）
-            // 获取测试用例的集合
-            testCaseList = Arrays.asList(testCase.split("\n"));
-        } else {
-            // 只有一个参数，直接放到集合中
-            testCaseList = Collections.singletonList(testCase);
-        }
-
-        // 合并生成可以编译执行的代码
-        String uCode = QuestionUtils.mergeCode(userCode, testCaseList);
-        Map<String, String> tokenMap = tokenUtil.parseToken(token);
-        String userId = tokenMap.get(TokenConstant.USER_ID_CLAIN);
-        // 用户执行代码文件名称保存为：Solution_用户id_当前毫秒数（不带后缀）。 例如：Solution_141324_1612927764160
-        String uFilename = "Solution_" + userId + "_" + System.currentTimeMillis();
-        String userFinalCode = uCode.replace("Solution", uFilename);
-        log.info("用户可执行代码={}", userFinalCode);
-        // 从数据库中查出标准的正确代码，和前段传来的测试用例跑一遍
-        QueryWrapper<Question> questionQueryWrapper = new QueryWrapper<>();
-        questionQueryWrapper.select("correct_code").eq("question_id", questionId);
-        Question question = questionMapper.selectOne(questionQueryWrapper);
-        String correctCode = question.getCorrectCode();
-        String aCode = QuestionUtils.mergeCode(correctCode, testCaseList);
-        String aFilename = "Solution" + "_" + userId + "_" + System.currentTimeMillis() + "_answer";
-        String answerFinalCode = aCode.replace("Solution", aFilename);
-        log.info("标准代码={}", answerFinalCode);
-        // 分别去跑这两份代码，得到输出结果
-        CompletableFuture<String> userFuture = asyncService.executeCompileAndRun(userFinalCode, destPath, uFilename);
-        CompletableFuture<String> answerFuture = asyncService.executeCompileAndRun(answerFinalCode, destPath, aFilename);
-        // 这个方法会阻塞主线程，一定可以拿到结果，但是有可能出现用户提交恶意代码的情况，暂时先放下，先做功能。
-        String userResult = userFuture.get();
-        String answerResult = answerFuture.get();
-        // 一共会有三个输出，按顺序分别是程序执行结果、内存消耗（字节）和时间消耗（毫秒）
-        String[] userArr = userResult.split("\n");
-        String[] answerArr = answerResult.split("\n");
-
-        dataMap.put("input", testCase);
-        dataMap.put("output", userArr[0]);
-        dataMap.put("exceptResult", answerArr[0]);
-        if (userArr[0].equals(answerArr[0])) {
-            dataMap.put("state", "已完成");
-        } else {
-            dataMap.put("state", "error");
-        }
-
-        return Result.ok(dataMap);
+    public Result runCode2(@RequestBody RunCodeRequestDTO runCodeRequestDTO) {
+        RunCodeResponseDTO runCodeResponseDTO = questionService.runCode(runCodeRequestDTO);
+        return Result.ok(runCodeResponseDTO);
     }
 
     /**

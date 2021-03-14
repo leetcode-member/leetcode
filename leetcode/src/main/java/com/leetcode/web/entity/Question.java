@@ -113,14 +113,17 @@ public class Question implements Serializable {
     private String initialCode;
 
     /**
-     * 用于评测的测试用例
+     * 初始的测试用例
      */
     private String initialTestCase;
     /**
      * 用于评测的测试用例
      */
     private String commitTestCase;
-
+    /**
+     * 用于评测的测试用例对应的标准答案
+     */
+    private String commitTestCaseAnswer;
     /**
      * 正确的代码 在数据库中新建此字段，
      */
